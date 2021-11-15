@@ -44,6 +44,33 @@
       "email": "bruce@gmail.com",
       "mobile": 9876543210,
       "questions": "I want to know about the Fee structure for this course?"
+    },
+    {
+      "cCode": "BTC2021",
+      "eCourse": "B.Tech",
+      "name": "emma stone",
+      "email": "emma@gmail.com",
+      "mobile": "7823412321",
+      "questions": "something about BE",
+      "id": 6
+    },
+    {
+      "cCode": "BTC2021",
+      "eCourse": "B.E",
+      "name": "Vinayak Chavan",
+      "email": "vc@gmail.com",
+      "mobile": "2344353453",
+      "questions": "BE in computer Science",
+      "id": 7
+    },
+    {
+      "cCode": "BTC2021",
+      "eCourse": "B.E",
+      "name": "clark kent",
+      "email": "kent@so.com",
+      "mobile": "9888777727",
+      "questions": "superman from DC",
+      "id": 8
     }
   ]
 }

@@ -11,17 +11,20 @@ function Course() {
 
     const [modalShow, setModalShow] = useState(false);
 
+    const [course,setCourse] = useState('')
+    const [code,setCode] = useState('')
+
     const getData = () =>{
         axios.get(url)
         .then((res)=>{
             const myRepo = res.data;
             setData(myRepo);
-            console.log(myRepo)
+            //console.log(myRepo)
         }
         );
     };
     useEffect(()=>getData(),[])
-
+    console.log(courseData)
 
     return (
         <div>
@@ -46,15 +49,19 @@ function Course() {
                             <td>{cd.courseName}</td>
                             <td>{cd.courseDuration}</td>
                             {/* <td><Button variant="info">Enquiry</Button></td> */}
-                           <td> <Button variant="primary" onClick={() => setModalShow(true)}>Enquiry</Button></td>
-                           <MyVerticallyCenteredModal
-                            show={modalShow}
-                            onHide={() => setModalShow(false)}
-                            />
+                           <td> <Button variant="primary" onClick={()=>{setModalShow(true)
+                           setCourse(cd.courseName)
+                           setCode(cd.cCode)}}>Enquiry</Button></td>
                         </tr>
                         ))}
                     </tbody>
                 </Table>
+                <MyVerticallyCenteredModal
+                    show={modalShow}
+                    course={course}
+                    ccode={code}
+                    onHide={() => setModalShow(false)}
+                />
             </Container>
         </div>
     )

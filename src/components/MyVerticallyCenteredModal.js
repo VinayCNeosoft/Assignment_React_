@@ -1,19 +1,21 @@
-import React, {useState,useRef} from 'react';
+import React, {useState,useRef,useEffect} from 'react';
 import { Button, Row, Modal, Form,Col, FormControl } from 'react-bootstrap';
 import axios from 'axios';
 // import {useNavigate} from "react-router-dom";
 
-const RegForName = RegExp('[a-zA-Z ]{2,100}');
-const RegForEmail = RegExp('^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+.com$');
+const RegForName = RegExp('^[a-zA-Z]+\\s[a-zA-Z]+$');
+const RegForEmail = RegExp('^[a-zA-Z0-9._-]+@[A-zA-Z0-9.-]+.com$');
 const RegForMobile = RegExp(/^(\+\d{1,3}[- ]?)?\d{10}$/)
+const RegForQues = RegExp('^[a-zA-z0-9 ]{10,100}$')
 
 const url = 'http://localhost:3003/enquir';
 
 function MyVerticallyCenteredModal(props) {
 
-    // const [eUData,setEData] = useState([])
+    //const [eUData,setEData] = useState([])
 
     const [course_Name,setCName] = useState()
+
     const [name,setName] = useState()
     const [email,setEmail] = useState()
     const [mobile,setMobile] = useState()
@@ -31,10 +33,19 @@ function MyVerticallyCenteredModal(props) {
     const [err_mobile,setErrMobile] = useState('')
     const [err_ques,setErrQues] = useState('')
 
-    // const navigate = useNavigate();
+    //const navigate = useNavigate();
+    /* const getData = () =>{
+        axios.get(url)
+        .then((res)=>{
+            const myRepo = res.data;
+            setEData(myRepo);
+            //console.log(myRepo)
+        }
+        );
+    }; */
 
-    const handler = e =>{
-        let fieldname = e.target.name
+    const handler = event =>{
+        let fieldname = event.target.name
         switch(fieldname){
             case 'coursename':
                 setErrCName(RegForName.test(course_NameRef.current.value)?'':'* Please enter valid Course Name')
@@ -57,46 +68,37 @@ function MyVerticallyCenteredModal(props) {
                 break
 
             case 'ques':
-                setErrQues(RegForName.test(quesRef.current.value)?'':"* At least ask 1 question")
+                setErrQues(RegForQues.test(quesRef.current.value)?'':"* At least ask 1 question")
                 setQuestion(quesRef.current.value)
                 break
             default:
             break;
         }
     }
-
-    /* const getData = () =>{
-        axios.get(url)
-        .then((res)=>{
-            const myRepo = res.data;
-            setEData(myRepo);
-            //console.log(myRepo)
-        }
-        );
-    };
-    useEffect(()=>getData(),[])
-    console.log(eUData) */
+    useEffect(()=>{
+        setCName('')
+        setName('')
+        setEmail('')
+        setMobile('')
+        setQuestion('')
+        setErrCName('')
+        setErrName('')
+        setErrEmail('')
+        setErrMobile('')
+        setErrQues('')
+    },[props.show] )
 
     const formSubmit= () =>
     {
         if(err_course_Name==='' && err_name==='' && err_email==='' && err_mobile==='' && err_ques==='')
         {
-            if(course_Name !== '' && name !== '' && email !== '' && mobile !== '' && ques !== '')
+            if(name !== '' && email !== '' && mobile !== '' && ques !== '')
             {
-                let formData = {"eCourse":props.course_Name, "name":props.name, "email":props.email, "mobile":props.mobile, "questions":props.ques}
+                const formData = {"cCode":props.code,"eCourse":props.course, "name":nameRef.current.value, "email":emailRef.current.value, "mobile":mobileRef.current.value, "questions":quesRef.current.value}
                 console.log(formData)
                 axios.post(url,formData)
-                setCName('')
-                setName('')
-                setEmail('')
-                setMobile('')
-                setQuestion('')
-                setErrCName('')
-                setErrName('')
-                setErrEmail('')
-                setErrMobile('')
-                setErrQues('')
-                {props.onHide()}
+                alert("Thank You for showing your Interest our team shortly connect to you.")
+                props.onHide()
             }
             else
             {
@@ -107,10 +109,6 @@ function MyVerticallyCenteredModal(props) {
         {
             alert("Please Enter Valid data to continue...")
         }
-        let formData = {"eCourse":props.course_Name, "name":props.name, "email":props.email, "mobile":props.mobile, "questions":props.ques}
-        console.log(formData)
-        axios.post(url,formData)
-        {props.onHide()}
     }
 
     return (
@@ -126,13 +124,21 @@ function MyVerticallyCenteredModal(props) {
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-        <Form>
+        <Form noValidate>
+        <Form.Group as={Row} className="mb-3" controlId="formHorizontalCode">
+                <Form.Label column sm={2}>
+                Course Code
+                </Form.Label>
+                <Col sm={10}>
+                <Form.Control type="text" name="code" value={props.code} disabled />
+                </Col>
+            </Form.Group>
             <Form.Group as={Row} className="mb-3" controlId="formHorizontalName">
                 <Form.Label column sm={2}>
                 Course Name
                 </Form.Label>
                 <Col sm={10}>
-                <Form.Control type="text" name="coursename" value={props.course_Name} disabled />
+                <Form.Control type="text" name="coursename" value={props.course} disabled />
                 </Col>
             </Form.Group>
             <Form.Group as={Row} className="mb-3" controlId="formHorizontalName">
@@ -141,7 +147,7 @@ function MyVerticallyCenteredModal(props) {
                 </Form.Label>
                 <Col sm={10}>
                 <Form.Control type="text" name="name" ref={nameRef}
-                onChange={e=>handler(e)} isInvalid={err_name===''?true:false} isValid={name!==''?true:false}/>
+                onChange={event=>handler(event)} isInvalid={err_name!==''?true:false} isValid={name!==''?true:false}/>
                 <FormControl.Feedback type="invalid">{err_name}</FormControl.Feedback>
                 </Col>
             </Form.Group>
@@ -151,7 +157,7 @@ function MyVerticallyCenteredModal(props) {
                 </Form.Label>
                 <Col sm={10}>
                 <Form.Control type="email" name="email" ref={emailRef}
-                onChange={e=>handler(e)} isInvalid={err_email===''?true:false} isValid={email!==''?true:false}/>
+                onChange={event=>handler(event)} isInvalid={err_email!==''?true:false} isValid={email!==''?true:false}/>
                 <FormControl.Feedback type="invalid">{err_email}</FormControl.Feedback>
                 </Col>
             </Form.Group>
@@ -162,7 +168,7 @@ function MyVerticallyCenteredModal(props) {
                 </Form.Label>
                 <Col sm={10}>
                 <Form.Control type="phone" name="mobile" ref={mobileRef}
-                onChange={e=>handler(e)} isInvalid={err_mobile===''?true:false} isValid={mobile!==''?true:false}/>
+                onChange={event=>handler(event)} isInvalid={err_mobile!==''?true:false} isValid={mobile!==''?true:false}/>
                 <FormControl.Feedback type="invalid">{err_mobile}</FormControl.Feedback>
                 </Col>
             </Form.Group>
@@ -172,7 +178,7 @@ function MyVerticallyCenteredModal(props) {
                 </Form.Label>
                 <Col sm={10}>
                 <Form.Control as="textarea" style={{ height: '100px' }} name="ques" ref={quesRef}
-                onChange={e=>handler(e)} isInvalid={err_ques===''?true:false} isValid={ques!==''?true:false}/>
+                onChange={event=>handler(event)} isInvalid={err_ques!==''?true:false} isValid={ques!==''?true:false}/>
                 <FormControl.Feedback type="invalid">{err_ques}</FormControl.Feedback>
                 </Col>
             </Form.Group>

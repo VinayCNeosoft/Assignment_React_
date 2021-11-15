@@ -22,12 +22,12 @@ function Enquiry() {
     return (
         <>
         <div>
-            <div className="App-header">
+            <div>
             <Container>
             <br/>
             <h1 className="text-center text-warning">All Enquires</h1>
                 <hr className="hl"/>
-                <Table responsive bordered className="text-center text-info">
+                <Table responsive bordered className="text-center text-primary">
                     <thead>
                         <tr>
                             <th>Course ID</th>
