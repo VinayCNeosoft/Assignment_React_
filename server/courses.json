@@ -1,0 +1,9 @@
+{
+    "courses":[
+        {"id":1,"cCode":"BTC2021","courseName":"B.Tech","courseDuration":"4 Years"},
+        {"id":2,"cCode":"BTC2021","courseName":"B.E","courseDuration":"4 Years"},
+        {"id":3,"cCode":"BTC2021","courseName":"Bsc","courseDuration":"3 Years"},
+        {"id":4,"cCode":"BTC2021","courseName":"Msc","courseDuration":"2 Years"},
+        {"id":5,"cCode":"BTC2021","courseName":"B.Tech","courseDuration":"2 Years"}
+    ]
+}

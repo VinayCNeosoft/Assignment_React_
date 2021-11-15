@@ -1,0 +1,49 @@
+{
+  "enquir": [
+    {
+      "id": 1,
+      "cCode": "BTC2021",
+      "eCourse": "B.Tech",
+      "name": "Bruce",
+      "email": "bruce@gmail.com",
+      "mobile": 9876543210,
+      "questions": "I want to know about the Fee structure for this course?"
+    },
+    {
+      "id": 2,
+      "cCode": "BTC2021",
+      "eCourse": "B.Tech",
+      "name": "Bruce",
+      "email": "bruce@gmail.com",
+      "mobile": 9876543210,
+      "questions": "I want to know about the Fee structure for this course?"
+    },
+    {
+      "id": 3,
+      "cCode": "BTC2021",
+      "eCourse": "B.Tech",
+      "name": "Bruce",
+      "email": "bruce@gmail.com",
+      "mobile": 9876543210,
+      "questions": "I want to know about the Fee structure for this course?"
+    },
+    {
+      "id": 4,
+      "cCode": "BTC2021",
+      "eCourse": "B.Tech",
+      "name": "Bruce",
+      "email": "bruce@gmail.com",
+      "mobile": 9876543210,
+      "questions": "I want to know about the Fee structure for this course?"
+    },
+    {
+      "id": 5,
+      "cCode": "BTC2021",
+      "eCourse": "B.Tech",
+      "name": "Bruce",
+      "email": "bruce@gmail.com",
+      "mobile": 9876543210,
+      "questions": "I want to know about the Fee structure for this course?"
+    }
+  ]
+}

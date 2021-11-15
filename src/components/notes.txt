@@ -1,0 +1,380 @@
+import React, {useState, useRef, useEffect} from 'react';
+import { Button, Row, Modal, Form,Col } from 'react-bootstrap';
+import axios from 'axios';
+
+const RegForName = RegExp('[a-zA-Z ]{2,100}');
+const RegForEmail = RegExp('^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+.com$');
+const RegForMobile = RegExp('^([+]d{2})?d{10}$')
+
+const url = 'http://localhost:3003/enquiry';
+
+function MyVerticallyCenteredModal(props) {
+    const [eUData,setEData] = useState([])
+
+    const [course_Name,setCName] = useState()
+    const [name,setName] = useState()
+    const [email,setEmail] = useState()
+    const [mobile,setMobile] = useState()
+    const [ques,setQuestion] = useState()
+
+    const course_NameRef = useRef()
+    const nameRef = useRef()
+    const emailRef = useRef()
+    const mobileRef = useRef()
+    const quesRef = useRef()
+
+    const [err_course_Name,setErrCName] = useState('')
+    const [err_name,setErrName] = useState('')
+    const [err_email,setErrEmail] = useState('')
+    const [err_mobile,setErrMobile] = useState('')
+    const [err_ques,setErrQues] = useState('')
+
+    const handler = (event) =>{
+        // let fieldname = event.target.name
+        const { name, value } = event.target;
+        console.log(course_NameRef)
+        switch(name){
+            case 'coursename':
+                setCName(value)
+                console.log(course_Name)
+                setErrCName(RegForName.test(value)?'':'* Please enter valid Course Name')
+                console.log(err_course_Name)
+                // setCName(course_NameRef.current.value)
+                break
+
+            case 'name':
+                setErrName(RegForName.test(nameRef.current.value)?'':'* Please enter Name - at least 6 characters')
+                setName(nameRef.current.value)
+                // console.log(username)
+                break
+
+            case 'email':
+                setErrEmail(RegForEmail.test(emailRef.current.value)?'':'* Please enter Valid Email')
+                setEmail(emailRef.current.value)
+                // console.log(email)
+                break
+
+            case 'mobile':
+                setErrMobile(RegForMobile.test(mobileRef.current.value)?'':"* Please enter 10 digit Mobile Number")
+                setMobile(mobileRef.current.value)
+                // console.log(password)
+                break
+
+            case 'ques':
+                setErrQues(RegForName.test(quesRef.current.value)?'':"* At least ask 1 question")
+                setQuestion(quesRef.current.value)
+                // console.log(confirmPassword)
+                break
+            default:
+            break;
+
+        }
+        // console.log(course_Name)
+        // console.log(name)
+        // console.log(email)
+        // console.log(mobile)
+        // console.log(ques)
+    }
+
+    const getData = () =>{
+        axios.get(url)
+        .then((res)=>{
+            const myRepo = res.data;
+            setEData(myRepo);
+            console.log(myRepo)
+        }
+        );
+    };
+    useEffect(()=>getData(),[])
+    console.log(eUData)
+
+    const formSubmit= () =>
+    {
+        if(err_course_Name==='' && err_name==='' && err_email==='' && err_mobile==='' && err_ques==='')
+        {
+            let formData = {"eCourse":course_Name, "name":name, "email":email, "mobile":mobile, "questions":ques}
+            axios.post(URL,formData)
+            .then(()=>{
+                alert("Successfully Registered")
+                course_NameRef.current.value=''
+                nameRef.current.value=''
+                emailRef.current.value=''
+                mobileRef.current.value=''
+                quesRef.current.value=''
+
+                console.log(course_Name)
+                console.log(name)
+                console.log(email)
+                console.log(mobile)
+                console.log(quesRef)
+            })
+        }
+        else
+        {
+            alert('Failed...')
+        }
+    }
+
+    return (
+      <Modal
+        {...props}
+        size="lg"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+      >
+        <Modal.Header closeButton>
+          <Modal.Title id="contained-modal-title-vcenter">
+            User Enquiry Form
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+        <Form>
+            <Form.Group as={Row} className="mb-3" controlId="formHorizontalName">
+                <Form.Label column sm={2}>
+                Course Name
+                </Form.Label>
+                <Col sm={10}>
+                <Form.Control type="text" name="coursename"
+                onChange={handler} error={err_course_Name===''?'':'error'}/>
+                <span>{err_course_Name}</span>
+                </Col>
+            </Form.Group>
+            <Form.Group as={Row} className="mb-3" controlId="formHorizontalName">
+                <Form.Label column sm={2}>
+                Name
+                </Form.Label>
+                <Col sm={10}>
+                <Form.Control type="text" name="name"
+                onChange={handler} error={err_name===''?'':'error'} inputRef={nameRef} helperText={err_name} />
+                </Col>
+            </Form.Group>
+            <Form.Group as={Row} className="mb-3" controlId="formHorizontalEmail">
+                <Form.Label column sm={2}>
+                Email
+                </Form.Label>
+                <Col sm={10}>
+                <Form.Control type="email" name="email"
+                onChange={handler} error={err_email===''?'':'error'} inputRef={emailRef} helperText={err_email} />
+                </Col>
+            </Form.Group>
+
+            <Form.Group as={Row} className="mb-3" controlId="formHorizontalMobile">
+                <Form.Label column sm={2}>
+                Mobile
+                </Form.Label>
+                <Col sm={10}>
+                <Form.Control type="phone" name="mobile"
+                onChange={handler} error={err_mobile===''?'':'error'} inputRef={mobileRef} helperText={err_mobile} />
+                </Col>
+            </Form.Group>
+            <Form.Group as={Row} className="mb-3" controlId="formHorizontalQuestions">
+                <Form.Label column sm={2}>
+                Any Questions?
+                </Form.Label>
+                <Col sm={10}>
+                <Form.Control as="textarea" style={{ height: '100px' }} name="ques"
+                onChange={handler} error={err_ques===''?'':'error'} inputRef={quesRef} helperText={err_ques} />
+                </Col>
+            </Form.Group>
+        </Form>
+        </Modal.Body>
+        <Modal.Footer className="justify-content-center">
+          <Button onClick={formSubmit}>Submit</Button>
+        </Modal.Footer>
+      </Modal>
+    );
+}
+export default MyVerticallyCenteredModal
+
+
+
+
+
+
+// Final Change
+
+import React, {useState,useEffect} from 'react';
+import { Button, Row, Modal, Form,Col } from 'react-bootstrap';
+import axios from 'axios';
+import {useNavigate} from "react-router-dom";
+
+const RegForName = RegExp('[a-zA-Z ]{2,100}');
+const RegForEmail = RegExp('^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+.com$');
+const RegForMobile = RegExp(/^(\+\d{1,3}[- ]?)?\d{10}$/)
+
+const url = 'http://localhost:3003/enquir';
+
+function MyVerticallyCenteredModal(props) {
+    const [eUData,setEData] = useState([])
+
+    const [course_Name,setCName] = useState()
+    const [name,setName] = useState()
+    const [email,setEmail] = useState()
+    const [mobile,setMobile] = useState()
+    const [ques,setQuestion] = useState()
+
+    // const course_NameRef = useRef()
+    // const nameRef = useRef()
+    // const emailRef = useRef()
+    // const mobileRef = useRef()
+    // const quesRef = useRef()
+
+    const [err_course_Name,setErrCName] = useState('')
+    const [err_name,setErrName] = useState('')
+    const [err_email,setErrEmail] = useState('')
+    const [err_mobile,setErrMobile] = useState('')
+    const [err_ques,setErrQues] = useState('')
+
+    const navigate = useNavigate();
+
+    const handler = (event) =>{
+        // let fieldname = event.target.name
+        const { name, value } = event.target;
+        switch(name){
+            case 'coursename':
+                console.log(course_Name)
+                setErrCName(RegForName.test(value)?'':'* Please enter valid Course Name')
+                setCName(value)
+                //console.log(err_course_Name)
+                // setCName(course_NameRef.current.value)
+                break
+
+            case 'name':
+                console.log(name)
+                setErrName(RegForName.test(value)?'':'* Please enter Name - at least 6 characters')
+                setName(value)
+                //setName(nameRef.current.value)
+                // console.log(username)
+                break
+
+            case 'email':
+                console.log(email)
+                setErrEmail(RegForEmail.test(value)?'':'* Please enter Valid Email')
+                setEmail(value)
+                //setEmail(emailRef.current.value)
+                // console.log(email)
+                break
+
+            case 'mobile':
+                console.log(mobile)
+                setErrMobile(RegForMobile.test(value)?'':"* Please enter 10 digit Mobile Number")
+                setMobile(value)
+                //setMobile(mobileRef.current.value)
+                // console.log(password)
+                break
+
+            case 'ques':
+                console.log(ques)
+                setErrQues(RegForName.test(value)?'':"* At least ask 1 question")
+                setQuestion(value)
+                //setQuestion(quesRef.current.value)
+                // console.log(confirmPassword)
+                break
+            default:
+            break;
+        }
+    }
+
+    const getData = () =>{
+        axios.get(url)
+        .then((res)=>{
+            const myRepo = res.data;
+            setEData(myRepo);
+            //console.log(myRepo)
+        }
+        );
+    };
+    useEffect(()=>getData(),[])
+    console.log(eUData)
+
+    const formSubmit= () =>
+    {
+        if(err_course_Name==='' && err_name==='' && err_email==='' && err_mobile==='' && err_ques==='')
+        {
+            let formData = {"eCourse":course_Name, "name":name, "email":email, "mobile":mobile, "questions":ques}
+            axios.post(url,formData)
+            .then(()=>{
+                alert("Thank You for your interest in " + `${course_Name}` +" course our Team shortly connect with you !")
+                navigate("/enq");
+            })
+        }
+        else
+        {
+            alert('Failed...');
+        }
+    }
+
+    return (
+      <Modal
+        {...props}
+        size="lg"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+      >
+        <Modal.Header closeButton>
+          <Modal.Title id="contained-modal-title-vcenter">
+            User Enquiry Form
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+        <Form>
+            <Form.Group as={Row} className="mb-3" controlId="formHorizontalName">
+                <Form.Label column sm={2}>
+                Course Name
+                </Form.Label>
+                <Col sm={10}>
+                <Form.Control type="text" name="coursename"
+                onChange={handler} error={err_course_Name===''?'':'error'} defaultValue={props.course_Name}/>
+                <span style={{color:"red"}}>{err_course_Name}</span>
+                </Col>
+            </Form.Group>
+            <Form.Group as={Row} className="mb-3" controlId="formHorizontalName">
+                <Form.Label column sm={2}>
+                Name
+                </Form.Label>
+                <Col sm={10}>
+                <Form.Control type="text" name="name"
+                onChange={handler} error={err_name===''?'':'error'}/>
+                <span style={{color:"red"}}>{err_name}</span>
+                </Col>
+            </Form.Group>
+            <Form.Group as={Row} className="mb-3" controlId="formHorizontalEmail">
+                <Form.Label column sm={2}>
+                Email
+                </Form.Label>
+                <Col sm={10}>
+                <Form.Control type="email" name="email"
+                onChange={handler} error={err_email===''?'':'error'} />
+                <span style={{color:"red"}}>{err_email}</span>
+                </Col>
+            </Form.Group>
+
+            <Form.Group as={Row} className="mb-3" controlId="formHorizontalMobile">
+                <Form.Label column sm={2}>
+                Mobile
+                </Form.Label>
+                <Col sm={10}>
+                <Form.Control type="phone" name="mobile"
+                onChange={handler} error={err_mobile===''?'':'error'} />
+                <span style={{color:"red"}}>{err_mobile}</span>
+                </Col>
+            </Form.Group>
+            <Form.Group as={Row} className="mb-3" controlId="formHorizontalQuestions">
+                <Form.Label column sm={2}>
+                Any Questions?
+                </Form.Label>
+                <Col sm={10}>
+                <Form.Control as="textarea" style={{ height: '100px' }} name="ques"
+                onChange={handler} error={err_ques===''?'':'error'} />
+                <span style={{color:"red"}}>{err_ques}</span>
+                </Col>
+            </Form.Group>
+        </Form>
+        </Modal.Body>
+        <Modal.Footer className="justify-content-center">
+          <Button onClick={formSubmit}>Submit</Button>
+        </Modal.Footer>
+      </Modal>
+    );
+}
+export default MyVerticallyCenteredModal
